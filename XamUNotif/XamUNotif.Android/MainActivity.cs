@@ -11,6 +11,7 @@ using Firebase.Iid;
 using Android.Util;
 using Android.Gms.Common;
 using Xamarin.Forms;
+using System.Threading.Tasks;
 
 namespace XamUNotif.Droid
 {
@@ -30,7 +31,16 @@ namespace XamUNotif.Droid
 			// In a "real" app you will have to deal with it if services are unavailable!
 			IsPlayServicesAvailable();
 
-
+#if DEBUG
+			// Force refresh of the token. If we redeploy the app, no new token will be sent but the old one will
+			// be invalid.
+			Task.Run(() =>
+			{
+				// This may not be executed on the main thread.
+				FirebaseInstanceId.Instance.DeleteInstanceId();
+				Console.WriteLine("Forced token: " + FirebaseInstanceId.Instance.Token);
+			});
+#endif
 		}
 
 		public bool IsPlayServicesAvailable()

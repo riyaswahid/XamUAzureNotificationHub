@@ -38,7 +38,9 @@ namespace XamUNotif
 
 		void OnMessageReceived(object sender, string msg)
 		{
-			lblMsg.Text = msg;
+			Device.BeginInvokeOnMainThread(() => {
+				lblMsg.Text = msg;	
+			});
 		}
 	}
 }
