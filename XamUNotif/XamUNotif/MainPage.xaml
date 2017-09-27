@@ -7,12 +7,12 @@
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
         <StackLayout Orientation="Horizontal">
             <Label Text="Received message:"/>
-            <Label Text="(nothing yet)" TextColor="Gray"/>
+            <Label x:Name="lblMsg" Text="(nothing yet)" TextColor="Gray"/>
         </StackLayout>
         
         <StackLayout Orientation="Horizontal">
             <Label Text="Send:" VerticalOptions="Center"/>
-            <Entry x:Name="entryMsg" WidthRequest="150"/>
+            <Entry x:Name="txtMsg" WidthRequest="150"/>
             <Button x:Name="btnSend" WidthRequest="100" Text="Send" BackgroundColor="Blue" TextColor="White"/>
         </StackLayout>
     </StackLayout>
