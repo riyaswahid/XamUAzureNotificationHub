@@ -10,9 +10,19 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using XamUNotif;
+<<<<<<< HEAD
 
 namespace XamUNotif.Droid
 {
+=======
+using Xamarin.Forms;
+using XamUNotif.Droid;
+
+[assembly: Dependency(typeof(AndroidMessageReceiver))]
+namespace XamUNotif.Droid
+{
+	
+>>>>>>> refs/heads/test-android
 	public class AndroidMessageReceiver : IMessageReceiver
 	{
 		public event EventHandler<string> MessageReceived;

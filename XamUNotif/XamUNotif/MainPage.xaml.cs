@@ -20,7 +20,11 @@ namespace XamUNotif
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
+<<<<<<< HEAD
 			_msgReceiver = DependencyService.Get<IMessageReceiver>();
+=======
+			_msgReceiver = DependencyService.Get<IMessageReceiver>(DependencyFetchTarget.GlobalInstance);
+>>>>>>> refs/heads/test-android
 			_msgReceiver.MessageReceived += OnMessageReceived;
 			btnSend.Clicked += OnBtnSendClicked;
 		}
