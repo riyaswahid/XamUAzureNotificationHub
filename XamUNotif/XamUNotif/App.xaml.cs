@@ -9,6 +9,8 @@ namespace XamUNotif
 {
 	public partial class App : Application
 	{
+		public const string NotificationReceivedKey = "NotificationReceived";
+
 		public App()
 		{
 			InitializeComponent();
