@@ -21,6 +21,7 @@ This section contains links for further reading. I found them helpful while inve
 * Firebase App Console: http://console.firebase.google.com/
 * Push notifications in Android with Xamarin: https://developer.xamarin.com/guides/android/application_fundamentals/notifications/firebase-cloud-messaging/
 * Android FCM payloads JSON: https://firebase.google.com/docs/cloud-messaging/concept-options
+* Extracting message data when app is in the background: https://firebase.google.com/docs/cloud-messaging/android/receive
 * Microsoft docs about using FCM with Azure: https://docs.microsoft.com/en-us/azure/notification-hubs/notification-hubs-android-push-notification-google-fcm-get-started
 
 ### iOS
