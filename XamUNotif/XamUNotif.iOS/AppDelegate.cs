@@ -1,31 +1,157 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+using System.Threading.Tasks;
 using Foundation;
 using UIKit;
+using UserNotifications;
+using Xamarin.Forms;
 
 namespace XamUNotif.iOS
 {
-	// The UIApplicationDelegate for the application. This class is responsible for launching the 
-	// User Interface of the application, as well as listening (and optionally responding) to 
-	// application events from iOS.
 	[Register("AppDelegate")]
 	public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
 	{
-		//
-		// This method is invoked when the application has loaded and is ready to run. In this 
-		// method you should instantiate the window, load the UI into it and then make the window
-		// visible.
-		//
-		// You have 17 seconds to return from this method, or iOS will terminate your application.
-		//
 		public override bool FinishedLaunching(UIApplication app, NSDictionary options)
 		{
 			global::Xamarin.Forms.Forms.Init();
 			LoadApplication(new App());
 
+			RequestPushPermissionAsync();
+
+			_launchOptions = options;
+
 			return base.FinishedLaunching(app, options);
+		}
+
+		NSDictionary _launchOptions;
+
+		public override void OnActivated(UIApplication uiApplication)
+		{
+			base.OnActivated(uiApplication);
+			// If app was not running and we come from a notificatio badge, the notification is delivered via the options.
+			if (_launchOptions != null && _launchOptions.ContainsKey(UIApplication.LaunchOptionsRemoteNotificationKey))
+			{
+				var notification = _launchOptions[UIApplication.LaunchOptionsRemoteNotificationKey] as NSDictionary;
+				PresentNotification(notification);
+			}
+			_launchOptions = null;
+		}
+
+		async Task RequestPushPermissionAsync()
+		{
+			// Pre iOS10
+			/*
+			UIApplication.SharedApplication.RegisterUserNotificationSettings(UIUserNotificationSettings.GetSettingsForTypes(
+				UIUserNotificationType.Alert
+				| UIUserNotificationType.Badge
+				| UIUserNotificationType.Sound,
+				null));
+
+			UIApplication.SharedApplication.RegisterForRemoteNotifications();
+			*/
+
+			// iOS10 and later (https://developer.xamarin.com/guides/ios/platform_features/user-notifications/enhanced-user-notifications/#Preparing_for_Notification_Delivery)
+			// Register for ANY type of notification (local or remote):
+			var requestResult = await UNUserNotificationCenter.Current.RequestAuthorizationAsync(
+				UNAuthorizationOptions.Alert
+				| UNAuthorizationOptions.Badge
+				| UNAuthorizationOptions.Sound);
+
+
+			// Item1 = approved boolean
+			bool approved = requestResult.Item1;
+			NSError error = requestResult.Item2;
+			if (error == null)
+			{
+				// Handle approval
+				if (!approved)
+				{
+					Console.Write("Permission to receive notifications was not granted.");
+					return;
+				}
+
+				var currentSettings = await UNUserNotificationCenter.Current.GetNotificationSettingsAsync();
+				if (currentSettings.AuthorizationStatus != UNAuthorizationStatus.Authorized)
+				{
+					Console.WriteLine("Permissions were requested in the past but have been revoked (-> Settings app).");
+					return;
+				}
+
+				UIApplication.SharedApplication.RegisterForRemoteNotifications();
+			}
+			else
+			{
+				Console.Write($"Error requesting permissions: {error}.");
+			}
+		}
+
+		public async override void RegisteredForRemoteNotifications(UIApplication application, NSData deviceToken)
+		{
+			if (deviceToken == null)
+			{
+				// Can happen in rare conditions e.g. after restoring a device.
+				return;
+			}
+
+			Console.WriteLine($"Token received: {deviceToken}");
+			await SendRegistrationToServerAsync(deviceToken);
+		}
+
+
+		async Task SendRegistrationToServerAsync(NSData deviceToken)
+		{
+			// TODO
+		}
+
+		public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
+		{
+			Console.WriteLine($"Failed to register for remote notifications: {error.Description}");
+		}
+
+		public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
+		{
+			// This will be called if the app is in the background/not running and if in the foreground.
+			// However, it will not display a notification visually if the app is in the foreground.
+
+			PresentNotification(userInfo);
+
+			completionHandler(UIBackgroundFetchResult.NoData);
+		}
+
+		void PresentNotification(NSDictionary dict)
+		{
+			// Extract some data from the notifiation and display it using an alert view.
+			NSDictionary aps = dict.ObjectForKey(new NSString("aps")) as NSDictionary;
+
+			var alert = string.Empty;
+			if (aps.ContainsKey(new NSString("alert")))
+			{
+				alert = (aps[new NSString("alert")] as NSString).ToString();
+			}
+
+			var msgReceiver = (AppleMessageReceiver)DependencyService.Get<IMessageReceiver>(DependencyFetchTarget.GlobalInstance);
+
+			if (!string.IsNullOrEmpty(alert))
+			{
+				msgReceiver.Handle(alert);
+			}
+			else
+			{
+				msgReceiver.Handle("(unable to parse)");
+			}
+		}
+
+		/// <summary>
+		/// If the notifications contains custom actions ("buttons"), this method will be called.
+		/// The notification has to contain a "category" key in the payload.
+		/// </summary>
+		/// <returns>The action.</returns>
+		/// <param name="application">Application.</param>
+		/// <param name="actionIdentifier">Action identifier.</param>
+		/// <param name="remoteNotificationInfo">Remote notification info.</param>
+		/// <param name="completionHandler">Completion handler.</param>
+		public override void HandleAction(UIApplication application, string actionIdentifier, NSDictionary remoteNotificationInfo, Action completionHandler)
+		{
+			// For details see: https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIApplicationDelegate_Protocol/index.html#//apple_ref/occ/intfm/UIApplicationDelegate/application:handleActionWithIdentifier:forRemoteNotification:completionHandler:
 		}
 	}
 }

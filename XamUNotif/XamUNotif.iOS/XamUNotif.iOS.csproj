@@ -50,6 +50,8 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <MtouchSdkVersion></MtouchSdkVersion>
+<IOSDebugOverWiFi>true</IOSDebugOverWiFi>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
     <DebugType>none</DebugType>
@@ -96,6 +98,7 @@
     <ITunesArtwork Include="iTunesArtwork" />
     <ITunesArtwork Include="iTunesArtwork@2x" />
     <None Include="packages.config" />
+    <Compile Include="AppleMessageReceiver.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
@@ -135,7 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XamUNotif\XamUNotif.csproj">
-      <Project>{96ee2e87-b0d0-41c9-a960-893b7ed404a5}</Project>
+      <Project>{D16D1FED-3834-4765-B291-9792D7FA46BB}</Project>
       <Name>XamUNotif</Name>
     </ProjectReference>
   </ItemGroup>
