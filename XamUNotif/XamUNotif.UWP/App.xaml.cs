@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Networking.PushNotifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using XForms = Xamarin.Forms;
 
 namespace XamUNotif.UWP
 {
@@ -37,7 +41,7 @@ namespace XamUNotif.UWP
 		/// will be used such as when the application is launched to open a specific file.
 		/// </summary>
 		/// <param name="e">Details about the launch request and process.</param>
-		protected override void OnLaunched(LaunchActivatedEventArgs e)
+		protected async override void OnLaunched(LaunchActivatedEventArgs e)
 		{
 
 #if DEBUG
@@ -78,6 +82,8 @@ namespace XamUNotif.UWP
 			}
 			// Ensure the current window is active
 			Window.Current.Activate();
+
+			await InitRemoteNotificationsAsync();
 		}
 
 		/// <summary>
@@ -102,6 +108,21 @@ namespace XamUNotif.UWP
 			var deferral = e.SuspendingOperation.GetDeferral();
 			//TODO: Save application state and stop any background activity
 			deferral.Complete();
+		}
+
+		async Task InitRemoteNotificationsAsync()
+		{
+			var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+			channel.PushNotificationReceived += OnPushNotificationReceived;
+			Debug.WriteLine($"Received token: {channel.Uri}");
+		}
+
+		private void OnPushNotificationReceived(
+			PushNotificationChannel sender, PushNotificationReceivedEventArgs args)
+		{
+			// In a "real" app, don't rely on toast notifications being sent.
+			var msg = args.ToastNotification.Content.InnerText;
+			XForms.MessagingCenter.Send<object, string>(this, XamUNotif.App.NotificationReceivedKey, msg);
 		}
 	}
 }
