@@ -15,14 +15,19 @@ namespace XamUNotif
 			InitializeComponent();
 		}
 
-		IMessageReceiver _msgReceiver;
-
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			_msgReceiver = DependencyService.Get<IMessageReceiver>(DependencyFetchTarget.GlobalInstance);
-			_msgReceiver.MessageReceived += OnMessageReceived;
+
+			MessagingCenter.Subscribe<object, string>(this, App.NotificationReceivedKey, OnMessageReceived);
 			btnSend.Clicked += OnBtnSendClicked;
+		}
+
+		void OnMessageReceived(object sender, string msg)
+		{
+			Device.BeginInvokeOnMainThread(() => {
+				lblMsg.Text = msg;
+			});
 		}
 
 		void OnBtnSendClicked(object sender, EventArgs e)
@@ -33,14 +38,7 @@ namespace XamUNotif
 		protected override void OnDisappearing()
 		{
 			base.OnDisappearing();
-			_msgReceiver.MessageReceived -= OnMessageReceived;
-		}
-
-		void OnMessageReceived(object sender, string msg)
-		{
-			Device.BeginInvokeOnMainThread(() => {
-				lblMsg.Text = msg;	
-			});
+			MessagingCenter.Unsubscribe<object>(this, App.NotificationReceivedKey);
 		}
 	}
 }

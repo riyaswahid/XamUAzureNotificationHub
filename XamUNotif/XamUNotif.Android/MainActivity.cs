@@ -98,7 +98,7 @@ namespace XamUNotif.Droid
 			Console.WriteLine("Received: " + message);
 
 			// Android supports different message payloads. To use the code below it must be something like this (you can paste this into Azure test send window):
-			// {
+				// {
 			//   "notification" : {
 			//      "body" : "The body",
 			//                 "title" : "The title",
@@ -108,8 +108,7 @@ namespace XamUNotif.Droid
 			try
 			{
 				var msg = message.GetNotification().Body;
-				var msgReceiver = (AndroidMessageReceiver)DependencyService.Get<IMessageReceiver>(DependencyFetchTarget.GlobalInstance);
-				msgReceiver.Handle(msg);
+				MessagingCenter.Send<object, string>(this, XamUNotif.App.NotificationReceivedKey, msg);
 			}
 			catch (Exception ex)
 			{
