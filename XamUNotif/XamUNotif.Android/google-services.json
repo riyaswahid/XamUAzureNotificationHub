@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "259947606585",
+    "firebase_url": "https://xamunotifandroid.firebaseio.com",
+    "project_id": "xamunotifandroid",
+    "storage_bucket": "xamunotifandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259947606585:android:e5b7d8535f36a9c1",
+        "android_client_info": {
+          "package_name": "com.xamarin.xamarinnotif"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259947606585-i3vjc8ko31tv23b4t0a7b3q8i7funrk0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzhkehBxC6hmXFmsCOeGd8tDyl0O90zaY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
