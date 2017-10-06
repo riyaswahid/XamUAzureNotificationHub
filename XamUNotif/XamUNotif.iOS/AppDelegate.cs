@@ -6,6 +6,8 @@ using Xamarin.Forms;
 using System.Threading.Tasks;
 using XamUNotif;
 using UserNotifications;
+using Microsoft.WindowsAzure.MobileServices;
+using Newtonsoft.Json.Linq;
 
 namespace XamUNotif.iOS
 {
@@ -92,7 +94,18 @@ namespace XamUNotif.iOS
 
 		async Task SendRegistrationToServerAsync(NSData deviceToken)
 		{
-			// TODO
+			// This is the template/payload used by iOS. It contains the "messageParam"
+			// that will be replaced by our service.
+			const string templateBodyAPNS = "{\"aps\":{\"alert\":\"$(messageParam)\"}}";
+
+			var templates = new JObject();
+			templates["genericMessage"] = new JObject
+			{
+				{"body", templateBodyAPNS}
+			};
+
+			var client = new MobileServiceClient(XamUNotif.App.MobileServiceUrl);
+			await client.GetPush().RegisterAsync(deviceToken, templates);
 		}
 
 		public override void FailedToRegisterForRemoteNotifications(UIApplication application, NSError error)
