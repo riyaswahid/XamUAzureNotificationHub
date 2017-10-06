@@ -3,7 +3,6 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using Microsoft.Azure.Mobile.Server;
 using Microsoft.Azure.Mobile.Server.Tables;
-using XamUNotif.Backend.DataObjects;
 
 namespace XamUNotif.Backend.Models
 {
@@ -25,9 +24,7 @@ namespace XamUNotif.Backend.Models
 		public MobileServiceContext() : base(connectionStringName)
 		{
 		}
-
-		public DbSet<TodoItem> TodoItems { get; set; }
-
+		
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
 			modelBuilder.Conventions.Add(
