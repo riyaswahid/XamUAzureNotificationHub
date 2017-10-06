@@ -17,6 +17,19 @@ This repo contains the code for the Lightning Lecture "Push notifications with A
 ## Useful links
 This section contains links for further reading. I found them helpful while investigating push notifications across the shown platforms.
 
+### Azure
+* Azure Portal: https://portal.azure.com
+* Adrian Hall's book "Develop Cloud Connected Mobile Apps with Xamarin and Microsoft Azure": https://adrianhall.github.io/develop-mobile-apps-with-csharp-and-azure/chapter5/concepts/
+* Notification Hub Rest API: https://msdn.microsoft.com/en-us/library/azure/dn530746.aspx
+* Azure Notification Hub docs: https://docs.microsoft.com/en-us/azure/notification-hubs/
+* Azure Mobile Apps .NET SDK: https://github.com/Azure/azure-mobile-apps-net-client
+* Push Notification Tags ("$InstallationId" feature): https://blogs.msdn.microsoft.com/writingdata_services/2016/01/22/adding-push-notification-tags-from-an-azure-mobile-apps-client/
+* Tags for targeted push messages: https://docs.microsoft.com/en-us/azure/notification-hubs/notification-hubs-tags-segment-push-message#tag-expressions
+* Use managed Client for Mobile Apps for push notifications: https://docs.microsoft.com/en-us/azure/app-service-mobile/app-service-mobile-dotnet-how-to-use-client-library#pushnotifications
+* What `GetPush().RegisterAsync()` really does: check out Adrian's book chapter 5 (https://adrianhall.github.io/develop-mobile-apps-with-csharp-and-azure/chapter5/concepts/) and find in there _"The /push/installations endpoint is part of App Service Push - a feature of the Azure App Service resource. This exists on your .azurewebsites.net domain. It is not part of Notification Hubs."_.
+You can find the source of this `NotificationInstallationsController` at https://github.com/Azure/azure-mobile-apps-net-server/blob/04d75cadc137cc478f98edfa1fa5b868e5548dfd/src/Microsoft.Azure.Mobile.Server.Notifications/Controllers/NotificationInstallationsController.cs. It is called from https://github.com/Azure/azure-mobile-apps-net-client/blob/8f0fc245f29c5b3245ce27e8428b0f4a90b948bc/src/Microsoft.Azure.Mobile.Client/Push/PushHttpClient.cs#L27.
+* Azure Notification Hub FAQ: https://docs.microsoft.com/en-us/azure/notification-hubs/notification-hubs-push-notification-faq
+
 ### Android
 * Firebase App Console: http://console.firebase.google.com/
 * Push notifications in Android with Xamarin: https://developer.xamarin.com/guides/android/application_fundamentals/notifications/firebase-cloud-messaging/
@@ -32,11 +45,8 @@ This section contains links for further reading. I found them helpful while inve
 * NWPusher to test push notifications directly from your Mac via APNS: https://github.com/noodlewerk/NWPusher
 
 ### Windows
-* Azure Portal: https://portal.azure.com
 * Windows developer portal: https://developer.microsoft.com respectively https://developer.microsoft.com/en-us/dashboard/
 * Windows WNS docs: https://docs.microsoft.com/en-us/windows/uwp/controls-and-patterns/tiles-and-notifications-windows-push-notification-services--wns--overview
-* Azure Notification Hub docs: https://docs.microsoft.com/en-us/azure/notification-hubs/
-* Azure Mobile Apps .NET SDK: https://github.com/Azure/azure-mobile-apps-net-client
 * Toast templates for WNS: https://msdn.microsoft.com/en-us/library/windows/apps/hh761494.aspx
 * Test send WNS notifications: http://pushtestserver.azurewebsites.net/wns/
 
