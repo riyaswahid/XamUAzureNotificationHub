@@ -10,6 +10,8 @@ namespace XamUNotif
 	public partial class App : Application
 	{
 		public const string NotificationReceivedKey = "NotificationReceived";
+		public const string MobileServiceUrl = "http://xamarinpushnotifhubbackend.azurewebsites.net";
+
 
 		public App()
 		{

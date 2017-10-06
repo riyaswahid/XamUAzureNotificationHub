@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -115,6 +117,30 @@ namespace XamUNotif.UWP
 			var channel = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
 			channel.PushNotificationReceived += OnPushNotificationReceived;
 			Debug.WriteLine($"Received token: {channel.Uri}");
+
+			const string templateBodyWNS =
+				"<toast>" +
+				"<visual>" +
+				"<binding template=\"ToastText01\">" +
+				"<text id=\"1\">$(messageParam)</text>" +
+				"</binding>" +
+				"</visual>" +
+				"</toast>";
+
+			var headers = new JObject();
+			headers["X-WNS-Type"] = "wns/toast";
+
+			JObject templates = new JObject();
+			templates["genericMessage"] = new JObject
+			 {
+				 {"body", templateBodyWNS},
+				 {"headers", headers} // Needed for WNS.
+			 };
+
+			var client = new MobileServiceClient(XamUNotif.App.MobileServiceUrl);
+			var push = client.GetPush();
+
+			await push.RegisterAsync(channel.Uri, templates);
 		}
 
 		private void OnPushNotificationReceived(
